@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AppleStoreWeb</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/product-images.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/hero-banner.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/svg-products.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/apple-products.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AppleStoreWeb.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1d1d1f;">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fab fa-apple me-2"></i>Apple Store
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Sản phẩm
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categoryId="1">iPhone</a></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categoryId="2">MacBook</a></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categoryId="3">iPad</a></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categoryId="4">Apple Watch</a></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categoryId="5">AirPods</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index">Tất cả sản phẩm</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <!-- Search Form -->
+                    <form class="d-flex me-3" asp-controller="Products" asp-action="Index" method="get">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Tìm sản phẩm..." style="width: 250px;">
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                    
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Index">
+                                        <i class="fas fa-cog me-1"></i>Quản trị
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" id="cart-count">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-1"></i>@User.Identity.Name
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <span class="badge bg-warning ms-1">Admin</span>
+                                    }
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index">Thông tin cá nhân</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index">Đơn hàng của tôi</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus me-1"></i>Đăng ký
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="text-white py-5" style="background-color: #1d1d1f;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5><i class="fab fa-apple me-2"></i>Apple Store</h5>
+                    <p class="text-muted">Cửa hàng Apple chính hãng tại Việt Nam</p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Sản phẩm</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="#" class="text-muted text-decoration-none">iPhone</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">MacBook</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">iPad</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Apple Watch</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Hỗ trợ</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li><a href="#" class="text-muted text-decoration-none">Liên hệ</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Bảo hành</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Hướng dẫn</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none">Chính sách</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Kết nối với chúng tôi</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2025 Apple Store Vietnam. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/apple-products.js" asp-append-version="true"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Update cart count on page load
+            @if (User.Identity.IsAuthenticated)
+            {
+                <text>updateCartCount();</text>
+            }
+            
+            // Add to cart functionality
+            $(document).on('click', '.add-to-cart', function() {
+                var productId = $(this).data('product-id');
+                
+                $.post('@Url.Action("AddToCart", "Cart")', { productId: productId }, function(data) {
+                    if (data.success) {
+                        alert(data.message);
+                        updateCartCount();
+                    }
+                }).fail(function() {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                });
+            });
+        });
+        
+        function updateCartCount() {
+            $.get('@Url.Action("GetCartCount", "Cart")', function(data) {
+                $('#cart-count').text(data.count);
+                if (data.count > 0) {
+                    $('#cart-count').show();
+                } else {
+                    $('#cart-count').hide();
+                }
+            });
+        }
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

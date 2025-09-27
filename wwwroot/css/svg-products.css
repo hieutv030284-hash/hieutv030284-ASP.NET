@@ -1,0 +1,177 @@
+/* SVG Product Illustrations */
+.svg-product {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.svg-product::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(0,122,255,0.1) 0%, transparent 50%);
+}
+
+/* iPhone SVG */
+.iphone-svg {
+    width: 80px;
+    height: 160px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 20px;
+    position: relative;
+    border: 2px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.iphone-svg::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: #000;
+    border-radius: 15px;
+}
+
+.iphone-svg::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+}
+
+/* MacBook SVG */
+.macbook-svg {
+    width: 120px;
+    height: 80px;
+    position: relative;
+}
+
+.macbook-base {
+    width: 120px;
+    height: 8px;
+    background: linear-gradient(135deg, #d1d1d6 0%, #a1a1a6 100%);
+    border-radius: 4px;
+    position: absolute;
+    bottom: 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.macbook-screen {
+    width: 100px;
+    height: 65px;
+    background: linear-gradient(135deg, #d1d1d6 0%, #a1a1a6 100%);
+    border-radius: 8px 8px 0 0;
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    border: 2px solid #a1a1a6;
+}
+
+.macbook-screen::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    background: #000;
+    border-radius: 4px;
+}
+
+/* iPad SVG */
+.ipad-svg {
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(135deg, #d1d1d6 0%, #a1a1a6 100%);
+    border-radius: 12px;
+    position: relative;
+    border: 2px solid #a1a1a6;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.ipad-svg::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    background: #000;
+    border-radius: 8px;
+}
+
+/* AirPods SVG */
+.airpods-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.airpod {
+    width: 20px;
+    height: 60px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+    border-radius: 10px;
+    position: relative;
+    border: 1px solid #e5e5e7;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.airpod::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 15px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+    border-radius: 4px;
+    border: 1px solid #e5e5e7;
+}
+
+.airpods-case {
+    width: 60px;
+    height: 25px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+    border-radius: 12px;
+    border: 1px solid #e5e5e7;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin: 0 10px;
+}
+
+/* Hover Effects */
+.svg-product:hover .iphone-svg,
+.svg-product:hover .macbook-svg,
+.svg-product:hover .ipad-svg,
+.svg-product:hover .airpod {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.svg-product:hover .macbook-screen::before {
+    background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+    transition: background 0.3s ease;
+}
+
+.svg-product:hover .iphone-svg::before,
+.svg-product:hover .ipad-svg::before {
+    background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+    transition: background 0.3s ease;
+}

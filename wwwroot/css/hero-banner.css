@@ -1,0 +1,136 @@
+/* Hero Banner with Apple-style visuals */
+.hero-banner {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 300px;
+    height: 600px;
+    background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+    border-radius: 40px;
+    border: 3px solid #666;
+    transform: rotate(-15deg);
+    opacity: 0.3;
+}
+
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    right: 12%;
+    width: 260px;
+    height: 520px;
+    background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+    border-radius: 35px;
+    transform: rotate(-15deg);
+    opacity: 0.8;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+/* Apple Logo Animation */
+.apple-logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #1d1d1f;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Product Showcase */
+.product-showcase {
+    background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-showcase::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0,122,255,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.product-showcase-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Floating Elements */
+.floating-element {
+    position: absolute;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element:nth-child(1) { animation-delay: 0s; }
+.floating-element:nth-child(2) { animation-delay: 2s; }
+.floating-element:nth-child(3) { animation-delay: 4s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Tech Specs Display */
+.tech-specs {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.spec-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.spec-icon {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 15px;
+    font-size: 0.8rem;
+}

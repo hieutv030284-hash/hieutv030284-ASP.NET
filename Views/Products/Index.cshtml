@@ -1,0 +1,150 @@
+@model IEnumerable<AppleStoreWeb.Models.Product>
+
+@{
+    ViewData["Title"] = "Sản phẩm";
+}
+
+@functions {
+    public string GetProductSlug(string productName)
+    {
+        var slug = productName.ToLower().Replace(" ", "-");
+        
+        // Specific mappings
+        if (slug.Contains("iphone-15-pro-max")) return "iphone-15-pro-max";
+        if (slug.Contains("iphone-15-pro")) return "iphone-15-pro";
+        if (slug.Contains("macbook")) return "macbook-air-m3";
+        if (slug.Contains("ipad-pro")) return "ipad-pro";
+        if (slug.Contains("airpods-pro")) return "airpods-pro";
+        
+        return slug;
+    }
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Bộ lọc</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get">
+                        <!-- Search -->
+                        <div class="mb-3">
+                            <label class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control" name="search" value="@ViewBag.CurrentSearch" placeholder="Nhập tên sản phẩm...">
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="mb-3">
+                            <label class="form-label">Danh mục</label>
+                            <select class="form-select" name="categoryId">
+                                <option value="">Tất cả danh mục</option>
+                                @foreach (var category in ViewBag.Categories as List<AppleStoreWeb.Models.Category>)
+                                {
+                                    <option value="@category.Id" selected="@(ViewBag.CurrentCategory == category.Id)">
+                                        @category.Name
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="mb-3">
+                            <label class="form-label">Khoảng giá</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="minPrice" value="@ViewBag.MinPrice" placeholder="Từ">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="maxPrice" value="@ViewBag.MaxPrice" placeholder="Đến">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="mb-3">
+                            <label class="form-label">Sắp xếp</label>
+                            <select class="form-select" name="sortBy">
+                                <option value="" selected="@(ViewBag.CurrentSort == "")">Mới nhất</option>
+                                <option value="price_asc" selected="@(ViewBag.CurrentSort == "price_asc")">Giá thấp đến cao</option>
+                                <option value="price_desc" selected="@(ViewBag.CurrentSort == "price_desc")">Giá cao đến thấp</option>
+                                <option value="name" selected="@(ViewBag.CurrentSort == "name")">Tên A-Z</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Áp dụng</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Sản phẩm (@Model.Count())</h2>
+            </div>
+
+            <div class="row g-4">
+                @foreach (var product in Model)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card product-card h-100 shadow-sm border-0">
+                            <div class="position-relative">
+                                <div class="product-image" data-product="@GetProductSlug(product.Name)" style="height: 250px;"></div>
+                                @if (product.OriginalPrice.HasValue && product.OriginalPrice > product.Price)
+                                {
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+                                        -@Math.Round((product.OriginalPrice.Value - product.Price) / product.OriginalPrice.Value * 100)%
+                                    </span>
+                                }
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@product.Name</h5>
+                                <p class="card-text text-muted flex-grow-1">@product.Description</p>
+                                
+                                @if (!string.IsNullOrEmpty(product.Color))
+                                {
+                                    <p class="text-muted mb-1"><small>Màu: @product.Color</small></p>
+                                }
+                                @if (!string.IsNullOrEmpty(product.Storage))
+                                {
+                                    <p class="text-muted mb-2"><small>Dung lượng: @product.Storage</small></p>
+                                }
+
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <div>
+                                        <span class="h5 text-primary mb-0">@product.Price.ToString("N0")₫</span>
+                                        @if (product.OriginalPrice.HasValue && product.OriginalPrice > product.Price)
+                                        {
+                                            <br><small class="text-muted text-decoration-line-through">@product.OriginalPrice.Value.ToString("N0")₫</small>
+                                        }
+                                    </div>
+                                    <div>
+                                        <a href="@Url.Action("Details", new { id = product.Id })" class="btn btn-outline-primary btn-sm me-1">Chi tiết</a>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <button class="btn btn-primary btn-sm add-to-cart" data-product-id="@product.Id">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>Không tìm thấy sản phẩm</h4>
+                    <p class="text-muted">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

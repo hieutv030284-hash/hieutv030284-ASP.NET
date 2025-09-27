@@ -1,0 +1,16 @@
+# Hướng dẫn thêm hình ảnh sản phẩm
+
+Để thêm hình ảnh sản phẩm thực tế, vui lòng:
+
+1. Tải hình ảnh sản phẩm Apple từ trang chính thức hoặc nguồn tin cậy
+2. Đặt tên file theo format: product-name.jpg (ví dụ: iphone-15-pro-max.jpg)
+3. Copy vào thư mục này: wwwroot/images/products/
+
+Danh sách hình ảnh cần thiết:
+- iphone-15-pro-max.jpg
+- iphone-15-pro.jpg  
+- macbook-air-m3.jpg
+- ipad-pro.jpg
+- airpods-pro.jpg
+
+Kích thước khuyến nghị: 800x600px hoặc tỷ lệ 4:3

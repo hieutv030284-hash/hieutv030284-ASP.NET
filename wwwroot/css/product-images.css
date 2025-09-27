@@ -1,0 +1,165 @@
+/* Product Images with CSS Background */
+.product-image {
+    width: 100%;
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+}
+
+/* iPhone 15 Pro */
+.iphone-15-pro {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    position: relative;
+}
+
+.iphone-15-pro::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 240px;
+    background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+    border-radius: 25px;
+    border: 2px solid #666;
+}
+
+.iphone-15-pro::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 200px;
+    background: #000;
+    border-radius: 20px;
+}
+
+/* MacBook Air M3 */
+.macbook-air-m3 {
+    background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+    position: relative;
+}
+
+.macbook-air-m3::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 100px;
+    background: linear-gradient(135deg, #d1d1d6 0%, #a1a1a6 100%);
+    border-radius: 8px;
+    border: 1px solid #c7c7cc;
+}
+
+.macbook-air-m3::after {
+    content: '';
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 80px;
+    background: #000;
+    border-radius: 4px;
+}
+
+/* iPad Pro */
+.ipad-pro {
+    background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+    position: relative;
+}
+
+.ipad-pro::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 180px;
+    background: linear-gradient(135deg, #d1d1d6 0%, #a1a1a6 100%);
+    border-radius: 15px;
+    border: 1px solid #c7c7cc;
+}
+
+.ipad-pro::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 160px;
+    background: #000;
+    border-radius: 10px;
+}
+
+/* AirPods Pro */
+.airpods-pro {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+    position: relative;
+}
+
+.airpods-pro::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 40%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 80px;
+    background: linear-gradient(135deg, #ffffff 0%, #e8e8ed 100%);
+    border-radius: 15px;
+    border: 1px solid #d1d1d6;
+}
+
+.airpods-pro::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    right: 40%;
+    transform: translateX(50%);
+    width: 30px;
+    height: 80px;
+    background: linear-gradient(135deg, #ffffff 0%, #e8e8ed 100%);
+    border-radius: 15px;
+    border: 1px solid #d1d1d6;
+}
+
+/* Category Icons */
+.category-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+    color: white;
+    font-size: 2rem;
+}
+
+.category-icon.iphone-icon {
+    background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+}
+
+.category-icon.macbook-icon {
+    background: linear-gradient(135deg, #8e8e93 0%, #636366 100%);
+}
+
+.category-icon.ipad-icon {
+    background: linear-gradient(135deg, #ff9500 0%, #ff6b35 100%);
+}

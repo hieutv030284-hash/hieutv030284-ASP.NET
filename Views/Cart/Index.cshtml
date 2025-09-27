@@ -1,0 +1,186 @@
+@model IEnumerable<AppleStoreWeb.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Giỏ hàng của bạn</h2>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        @foreach (var item in Model)
+                        {
+                            <div class="cart-item border-bottom py-3" data-cart-id="@item.Id">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <img src="@item.Product.ImageUrl" class="img-fluid rounded" alt="@item.Product.Name" style="height: 80px; object-fit: cover;">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="mb-1">@item.Product.Name</h6>
+                                        <small class="text-muted">@item.Product.Category.Name</small>
+                                        @if (!string.IsNullOrEmpty(item.Product.Color))
+                                        {
+                                            <br><small class="text-muted">Màu: @item.Product.Color</small>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.Product.Storage))
+                                        {
+                                            <br><small class="text-muted">Dung lượng: @item.Product.Storage</small>
+                                        }
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="fw-bold text-primary">@item.Product.Price.ToString("N0")₫</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group input-group-sm">
+                                            <button class="btn btn-outline-secondary decrease-qty" type="button">-</button>
+                                            <input type="number" class="form-control text-center quantity-input" value="@item.Quantity" min="1" data-cart-id="@item.Id">
+                                            <button class="btn btn-outline-secondary increase-qty" type="button">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <span class="fw-bold item-total">@((item.Product.Price * item.Quantity).ToString("N0"))₫</span>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-outline-danger btn-sm remove-item" data-cart-id="@item.Id">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Tóm tắt đơn hàng</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tạm tính:</span>
+                            <span id="subtotal">@Model.Sum(x => x.Product.Price * x.Quantity).ToString("N0")₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Phí vận chuyển:</span>
+                            <span class="text-success">Miễn phí</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Tổng cộng:</strong>
+                            <strong class="text-primary" id="total">@Model.Sum(x => x.Product.Price * x.Quantity).ToString("N0")₫</strong>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="@Url.Action("Index", "Checkout")" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card me-2"></i>Thanh toán
+                            </a>
+                            <a href="@Url.Action("Index", "Products")" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promotion -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6>Ưu đãi đặc biệt</h6>
+                        <ul class="list-unstyled small text-muted">
+                            <li><i class="fas fa-check text-success me-2"></i>Miễn phí vận chuyển toàn quốc</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Bảo hành chính hãng Apple</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Đổi trả trong 30 ngày</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Hỗ trợ kỹ thuật 24/7</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+            <h4>Giỏ hàng trống</h4>
+            <p class="text-muted mb-4">Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+            <a href="@Url.Action("Index", "Products")" class="btn btn-primary">
+                <i class="fas fa-shopping-bag me-2"></i>Bắt đầu mua sắm
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Increase quantity
+            $('.increase-qty').click(function() {
+                var input = $(this).siblings('.quantity-input');
+                var currentVal = parseInt(input.val());
+                input.val(currentVal + 1);
+                updateCartItem(input);
+            });
+
+            // Decrease quantity
+            $('.decrease-qty').click(function() {
+                var input = $(this).siblings('.quantity-input');
+                var currentVal = parseInt(input.val());
+                if (currentVal > 1) {
+                    input.val(currentVal - 1);
+                    updateCartItem(input);
+                }
+            });
+
+            // Quantity input change
+            $('.quantity-input').change(function() {
+                updateCartItem($(this));
+            });
+
+            // Remove item
+            $('.remove-item').click(function() {
+                var cartId = $(this).data('cart-id');
+                if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+                    $.post('@Url.Action("RemoveFromCart", "Cart")', { cartItemId: cartId }, function(data) {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+
+            function updateCartItem(input) {
+                var cartId = input.data('cart-id');
+                var quantity = parseInt(input.val());
+                
+                $.post('@Url.Action("UpdateQuantity", "Cart")', { 
+                    cartItemId: cartId, 
+                    quantity: quantity 
+                }, function(data) {
+                    if (data.success) {
+                        updateTotals();
+                    }
+                });
+            }
+
+            function updateTotals() {
+                var subtotal = 0;
+                $('.cart-item').each(function() {
+                    var price = parseFloat($(this).find('.fw-bold.text-primary').text().replace(/[₫,]/g, ''));
+                    var quantity = parseInt($(this).find('.quantity-input').val());
+                    var itemTotal = price * quantity;
+                    $(this).find('.item-total').text(itemTotal.toLocaleString() + '₫');
+                    subtotal += itemTotal;
+                });
+                
+                $('#subtotal').text(subtotal.toLocaleString() + '₫');
+                $('#total').text(subtotal.toLocaleString() + '₫');
+            }
+        });
+    </script>
+}

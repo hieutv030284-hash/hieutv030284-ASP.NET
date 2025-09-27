@@ -1,0 +1,261 @@
+@model AppleStoreWeb.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+@functions {
+    public string GetProductSlug(string productName)
+    {
+        var slug = productName.ToLower().Replace(" ", "-");
+        
+        // Specific mappings
+        if (slug.Contains("iphone-15-pro-max")) return "iphone-15-pro-max";
+        if (slug.Contains("iphone-15-pro")) return "iphone-15-pro";
+        if (slug.Contains("macbook")) return "macbook-air-m3";
+        if (slug.Contains("ipad-pro")) return "ipad-pro";
+        if (slug.Contains("airpods-pro")) return "airpods-pro";
+        
+        return slug;
+    }
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Products")">Sản phẩm</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Products", new { categoryId = Model.CategoryId })">@Model.Category.Name</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6">
+            <div class="product-images">
+                <div class="main-image mb-3">
+                    <div class="product-image" data-product="@GetProductSlug(Model.Name)" id="mainImage" style="width: 100%; height: 400px; border-radius: 0.375rem;"></div>
+                </div>
+                @if (Model.ImageUrls.Any())
+                {
+                    <div class="thumbnail-images">
+                        <div class="row g-2">
+                            <div class="col-3">
+                                <div class="product-image img-thumbnail thumbnail-img active" data-product="@GetProductSlug(Model.Name)" style="cursor: pointer; height: 80px;"></div>
+                            </div>
+                            @foreach (var imageUrl in Model.ImageUrls.Take(3))
+                            {
+                                <div class="col-3">
+                                    <img src="@imageUrl" class="img-thumbnail thumbnail-img" alt="@Model.Name" style="cursor: pointer; height: 80px; object-fit: cover;">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <div class="product-info">
+                <h1 class="mb-3">@Model.Name</h1>
+                
+                <div class="price-section mb-4">
+                    <span class="h2 text-primary">@Model.Price.ToString("N0")₫</span>
+                    @if (Model.OriginalPrice.HasValue && Model.OriginalPrice > Model.Price)
+                    {
+                        <span class="h5 text-muted text-decoration-line-through ms-2">@Model.OriginalPrice.Value.ToString("N0")₫</span>
+                        <span class="badge bg-danger ms-2">
+                            Giảm @Math.Round((Model.OriginalPrice.Value - Model.Price) / Model.OriginalPrice.Value * 100)%
+                        </span>
+                    }
+                </div>
+
+                <div class="product-specs mb-4">
+                    @if (!string.IsNullOrEmpty(Model.Color))
+                    {
+                        <div class="spec-item mb-2">
+                            <strong>Màu sắc:</strong> @Model.Color
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Storage))
+                    {
+                        <div class="spec-item mb-2">
+                            <strong>Dung lượng:</strong> @Model.Storage
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Specifications))
+                    {
+                        <div class="spec-item mb-2">
+                            <strong>Thông số:</strong> @Model.Specifications
+                        </div>
+                    }
+                    <div class="spec-item mb-2">
+                        <strong>Tình trạng:</strong> 
+                        @if (Model.Stock > 0)
+                        {
+                            <span class="text-success">Còn hàng (@Model.Stock sản phẩm)</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Hết hàng</span>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.Stock > 0)
+                {
+                    <div class="purchase-section mb-4">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="quantity-selector mb-3">
+                                <label class="form-label">Số lượng:</label>
+                                <div class="input-group" style="width: 150px;">
+                                    <button class="btn btn-outline-secondary" type="button" id="decreaseQty">-</button>
+                                    <input type="number" class="form-control text-center" id="quantity" value="1" min="1" max="@Model.Stock">
+                                    <button class="btn btn-outline-secondary" type="button" id="increaseQty">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex">
+                                <button class="btn btn-primary btn-lg flex-fill" id="addToCartBtn" data-product-id="@Model.Id">
+                                    <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
+                                </button>
+                                <button class="btn btn-success btn-lg flex-fill">
+                                    <i class="fas fa-bolt me-2"></i>Mua ngay
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Vui lòng <a href="/Identity/Account/Login" class="alert-link">đăng nhập</a> để mua hàng
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="product-features">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="feature-item text-center p-3 border rounded">
+                                <i class="fas fa-shield-alt text-success mb-2"></i>
+                                <div class="small">Bảo hành chính hãng</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="feature-item text-center p-3 border rounded">
+                                <i class="fas fa-shipping-fast text-info mb-2"></i>
+                                <div class="small">Giao hàng miễn phí</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="feature-item text-center p-3 border rounded">
+                                <i class="fas fa-exchange-alt text-warning mb-2"></i>
+                                <div class="small">Đổi trả 30 ngày</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="feature-item text-center p-3 border rounded">
+                                <i class="fas fa-headset text-primary mb-2"></i>
+                                <div class="small">Hỗ trợ 24/7</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Description -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Mô tả sản phẩm</h4>
+                </div>
+                <div class="card-body">
+                    <p>@Model.Description</p>
+                    @if (!string.IsNullOrEmpty(Model.Specifications))
+                    {
+                        <h5>Thông số kỹ thuật:</h5>
+                        <p>@Model.Specifications</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (ViewBag.RelatedProducts != null && ((List<AppleStoreWeb.Models.Product>)ViewBag.RelatedProducts).Any())
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <h4 class="mb-4">Sản phẩm liên quan</h4>
+                <div class="row g-4">
+                    @foreach (var relatedProduct in (List<AppleStoreWeb.Models.Product>)ViewBag.RelatedProducts)
+                    {
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card product-card h-100 shadow-sm border-0">
+                                <div class="product-image" data-product="@GetProductSlug(relatedProduct.Name)" style="height: 200px;"></div>
+                                <div class="card-body">
+                                    <h6 class="card-title">@relatedProduct.Name</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold">@relatedProduct.Price.ToString("N0")₫</span>
+                                        <a href="@Url.Action("Details", new { id = relatedProduct.Id })" class="btn btn-outline-primary btn-sm">Xem</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Quantity controls
+            $('#increaseQty').click(function() {
+                var qty = parseInt($('#quantity').val());
+                var max = parseInt($('#quantity').attr('max'));
+                if (qty < max) {
+                    $('#quantity').val(qty + 1);
+                }
+            });
+
+            $('#decreaseQty').click(function() {
+                var qty = parseInt($('#quantity').val());
+                if (qty > 1) {
+                    $('#quantity').val(qty - 1);
+                }
+            });
+
+            // Image gallery
+            $('.thumbnail-img').click(function() {
+                $('.thumbnail-img').removeClass('active');
+                $(this).addClass('active');
+                $('#mainImage').attr('src', $(this).attr('src'));
+            });
+
+            // Add to cart
+            $('#addToCartBtn').click(function() {
+                var productId = $(this).data('product-id');
+                var quantity = parseInt($('#quantity').val());
+                
+                $.post('@Url.Action("AddToCart", "Cart")', { 
+                    productId: productId, 
+                    quantity: quantity 
+                }, function(data) {
+                    if (data.success) {
+                        alert(data.message);
+                    }
+                });
+            });
+        });
+    </script>
+}

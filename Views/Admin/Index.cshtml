@@ -1,0 +1,175 @@
+@model AppleStoreWeb.Models.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Quản trị hệ thống";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard Quản trị</h2>
+        <span class="badge bg-success">Admin Panel</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.TotalProducts</h4>
+                            <p class="mb-0">Sản phẩm</p>
+                        </div>
+                        <i class="fas fa-box fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.TotalOrders</h4>
+                            <p class="mb-0">Đơn hàng</p>
+                        </div>
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.TotalUsers</h4>
+                            <p class="mb-0">Người dùng</p>
+                        </div>
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.TotalRevenue.ToString("N0")₫</h4>
+                            <p class="mb-0">Doanh thu</p>
+                        </div>
+                        <i class="fas fa-dollar-sign fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bolt me-2"></i>Thao tác nhanh</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Products")" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="fas fa-box me-2"></i>Quản lý sản phẩm
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Orders")" class="btn btn-outline-success w-100 mb-2">
+                                <i class="fas fa-shopping-cart me-2"></i>Quản lý đơn hàng
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Users")" class="btn btn-outline-info w-100 mb-2">
+                                <i class="fas fa-users me-2"></i>Quản lý khách hàng
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Products")" class="btn btn-outline-secondary w-100 mb-2">
+                                <i class="fas fa-eye me-2"></i>Xem website
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Profile")" class="btn btn-outline-secondary w-100 mb-2">
+                                <i class="fas fa-user me-2"></i>Thông tin cá nhân
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-clock me-2"></i>Đơn hàng gần đây</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentOrders.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mã đơn</th>
+                                        <th>Khách hàng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.RecentOrders)
+                                    {
+                                        <tr>
+                                            <td>#@order.Id</td>
+                                            <td>@order.CustomerName</td>
+                                            <td>@order.TotalAmount.ToString("N0")₫</td>
+                                            <td>
+                                                @switch (order.Status)
+                                                {
+                                                    case OrderStatus.Pending:
+                                                        <span class="badge bg-warning">Chờ xử lý</span>
+                                                        break;
+                                                    case OrderStatus.Processing:
+                                                        <span class="badge bg-primary">Đang xử lý</span>
+                                                        break;
+                                                    case OrderStatus.Shipped:
+                                                        <span class="badge bg-info">Đang giao</span>
+                                                        break;
+                                                    case OrderStatus.Delivered:
+                                                        <span class="badge bg-success">Đã giao</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>@order.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Orders", new { id = order.Id })" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">Chưa có đơn hàng nào</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
